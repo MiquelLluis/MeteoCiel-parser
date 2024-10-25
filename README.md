@@ -15,7 +15,7 @@ print(weather)
 ```
 
 
-### Dependencies
+## Dependencies
 
 - `pandas`: Data manipulation and analysis.
 - `requests`: HTTP requests for fetching web pages.
