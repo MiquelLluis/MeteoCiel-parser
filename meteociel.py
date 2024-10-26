@@ -123,6 +123,7 @@ def _plot_weather_data(df):
         Y_label="Precipitation (mm)",
         x_min=x_min,
         x_max=x_max,
+        y_min=0,
         marker='▮',  # Emulates bar-like appearance
         lc='blue'
     ))
