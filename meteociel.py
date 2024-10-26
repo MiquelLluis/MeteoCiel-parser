@@ -141,6 +141,10 @@ if __name__ == '__main__':
     if len(args) == 1:
         if args[0] != '-p':
             raise ValueError("argument not recognized; only '-p' is available")
+        elif not _PLOTILLE:
+            raise ImportError("The 'plotille' library is required for plotting. "
+                              "Install it with 'pip install plotille' or run the "
+                              "script without the '-p' flag.")
         plot = True
     else:
         plot = False
