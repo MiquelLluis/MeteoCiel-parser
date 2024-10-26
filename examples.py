@@ -1,17 +1,15 @@
+import subprocess
+
 from meteociel import fetch_weather
 
 
 def paris_arome():
-    url = 'https://www.meteociel.fr/previsions-arome-1h/27817/paris.htm'
-    weather = fetch_weather(url)
-    print(weather[['Date', 'Time', 'Temperature', 'Wind Speed', 'Wind Gust', 'Precipitation', 'Humidity']])
+    subprocess.run(['python', 'meteociel.py', 'https://www.meteociel.fr/previsions-arome-1h/27817/paris.htm'])
 
-def paris_wrf():
-    url = 'https://www.meteociel.fr/previsions-wrf-1h/27817/paris.htm'
-    weather = fetch_weather(url)
-    print(weather[['Date', 'Time', 'Temperature', 'Wind Speed', 'Wind Gust', 'Precipitation', 'Humidity']])
+def paris_arome_plot():
+    subprocess.run(['python', 'meteociel.py', '-p', 'https://www.meteociel.fr/previsions-arome-1h/27817/paris.htm'])
 
 
 if __name__ == '__main__':
     paris_arome()
-    # paris_wrf()
+    paris_arome_plot()
