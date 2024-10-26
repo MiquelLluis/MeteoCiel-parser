@@ -35,12 +35,14 @@ If run without the `-p` flag, the script will output a summary table of Date, Ti
 ```bash
 python meteociel.py https://www.meteociel.fr/previsions-arome-1h/27817/paris.htm
 ```
+![](./example1.png)
 
 To enable ASCII plotting, use the `-p` flag:
 
 ```bash
 python meteociel.py -p https://www.meteociel.fr/previsions-arome-1h/27817/paris.htm
 ```
+![](./example2.png)
 
 
 
