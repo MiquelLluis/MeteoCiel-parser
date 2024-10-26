@@ -56,5 +56,5 @@ python meteociel.py -p https://www.meteociel.fr/previsions-arome-1h/27817/paris.
 
 ## Acknowledgements
 
-This project was greatly improved thanks to the valuable insight of [Dr. Vallés](https://github.com/dvallesp), whose valuable expertise in the quokks field made this an elegant tool for weather display.
+This project was greatly improved thanks to the valuable insight of [Dr. Vallés](https://github.com/dvallesp), whose expertise in the quokks field made this an elegant tool for weather display.
 
