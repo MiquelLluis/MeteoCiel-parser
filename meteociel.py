@@ -156,4 +156,5 @@ if __name__ == '__main__':
         _plot_weather_data(data[['Time', 'Temperature', 'Wind Speed', 'Precipitation']])
     
     else:
-        print(data[['Date', 'Time', 'Temperature', 'Wind Speed', 'Wind Gust', 'Precipitation', 'Humidity']])
+        with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+            print(data[['Date', 'Time', 'Temperature', 'Wind Speed', 'Wind Gust', 'Precipitation', 'Humidity']])
