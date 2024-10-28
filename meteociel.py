@@ -76,7 +76,7 @@ def _plot_weather_data(df):
         A 2D array where each column represents Time, Temperature, Wind speed, and Precipitation.
     """
     hours = df["Time"].apply(lambda x: int(x.split(":")[0]))
-        # Detect day changes by finding where the hour value goes backwards
+    # Detect day changes by finding where the hour value goes backwards
     day_offsets = (hours.diff() < 0).cumsum()  # Increment day count when hour goes back
     unrolled_hours = hours + day_offsets * 24  # Accumulate hours, adding 24h for each new day
 
@@ -85,7 +85,12 @@ def _plot_weather_data(df):
 
     temperature = df["Temperature"].str.replace(" °C", "").astype(int)
     wind_speed = df["Wind Speed"].astype(int)
-    precipitation = df["Precipitation"].replace("--", "0.0").str.replace(" mm", "").astype(float)    # Set up titles and labels for each subplot
+    precipitation = df["Precipitation"].replace("--", "0.0").str.replace(" mm", "").astype(float)
+    
+    # Filter out zero precipitation points
+    non_zero_precipitation = precipitation > 0
+    precipitation_non_zero = precipitation[non_zero_precipitation]
+    hours_non_zero = unrolled_hours[non_zero_precipitation]
 
     # Plot Temperature
     print(plotille.plot(
@@ -113,10 +118,10 @@ def _plot_weather_data(df):
         lc='magenta'
     ))
 
-    # Plot Precipitation as a bar-like plot
+    # Plot Precipitation as a bar-like plot, ignoring zero values
     print('\n')
     print(plotille.plot(
-        unrolled_hours, precipitation,
+        hours_non_zero, precipitation_non_zero,
         width=60,
         height=10,
         X_label="Time (h)",
@@ -127,6 +132,7 @@ def _plot_weather_data(df):
         marker='▮',  # Emulates bar-like appearance
         lc='blue'
     ))
+
 
 
 if __name__ == '__main__':

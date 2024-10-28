@@ -1,4 +1,3 @@
-- Remove plot markers in the precipitation graphic when there is no precipitation.
 - Scrap data from Meteoclimatic to allow for correlations between prediction models and past data.
 - Optionally store past predictions for future analysis.
 
