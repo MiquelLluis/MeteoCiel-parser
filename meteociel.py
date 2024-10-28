@@ -66,7 +66,7 @@ def _parse_weather_table(html):
 
 
 def _initialise_figure(width=60, height=10, xmin=None, xmax=None, ymin=None, ymax=None,
-                       xlabel=None, ylabel=None):
+                       xlabel=None, ylabel=None, color_mode='names'):
     """
     Initialises a Plotille Figure object with default settings for plotting weather data.
 
@@ -88,6 +88,8 @@ def _initialise_figure(width=60, height=10, xmin=None, xmax=None, ymin=None, yma
         The label for the x-axis.
     ylabel : str, optional
         The label for the y-axis.
+    color_mode : str, optional
+        The used color mode. See `plotille.color()`.
 
     Returns
     -------
@@ -95,6 +97,7 @@ def _initialise_figure(width=60, height=10, xmin=None, xmax=None, ymin=None, yma
         A Plotille Figure object with the specified settings.
     """
     fig = plotille.Figure()
+    fig.color_mode = color_mode
     fig.width = width
     fig.height = height
 
@@ -135,10 +138,18 @@ def _annotate_days(fig):
     x_min, x_max = fig.x_limits()
     y_min, y_max = fig.y_limits()
 
+    # Be consistent with the color mode
+    if fig.color_mode == 'names':
+        line_color = 'bright_black'
+    elif fig.color_mode == 'rgb':
+        line_color = (39, 43, 52)
+    else:
+        raise NotImplementedError
+
     # Annotate days with vertical lines
     x_ini = (x_min // 24 + 1) * 24
     while x_ini < x_max:
-        fig.plot([x_ini, x_ini], [y_min, y_max], lc='bright_black', label=str(x_ini))
+        fig.plot([x_ini, x_ini], [y_min, y_max], lc=line_color, label=str(x_ini))
         x_ini += 24
 
     return fig
@@ -206,29 +217,22 @@ def _plot_weather_data(df):
         xlabel="Time (h)",
         ylabel="Precipitation (mm)"
     )
-
-    # Markers for non-zero and zero precipitation
-    fig.plot(
-        hours_non_zero, precipitation_non_zero,
-        marker='▮',  # Emulates bar-like appearance
-        lc='blue',
-        interp=None
-    )
-    fig.plot(
-        hours_zero, precipitation[~non_zero_precipitation],
-        marker='□',
-        lc='blue',
-        interp=None
-    )
-
-    # Line joining everything for better visualization
+    # Draw day separation lines first
+    fig = _annotate_days(fig)
+    # Line joining everything first, for better visualization
     fig.plot(
         unrolled_hours, precipitation,
         lc='blue',
         interp='linear',
         marker=None
     )
-    fig = _annotate_days(fig)
+    # Markers for non-zero precipitation
+    fig.plot(
+        hours_non_zero, precipitation_non_zero,
+        marker='🌢', # Emulates bar-like appearance
+        lc='blue',
+        interp=None
+    )
     print(fig.show())
 
 
