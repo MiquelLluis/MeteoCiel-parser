@@ -1,3 +1,4 @@
+- Add custom ticklabels to better indicate hours of following days instead of using cumulative hours.
 - Scrap data from Meteoclimatic to allow for correlations between prediction models and past data.
 - Optionally store past predictions for future analysis.
 
