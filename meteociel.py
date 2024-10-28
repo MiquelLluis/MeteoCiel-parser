@@ -91,6 +91,7 @@ def _plot_weather_data(df):
     non_zero_precipitation = precipitation > 0
     precipitation_non_zero = precipitation[non_zero_precipitation]
     hours_non_zero = unrolled_hours[non_zero_precipitation]
+    hours_zero = unrolled_hours[~non_zero_precipitation]
 
     # Plot Temperature
     print(plotille.plot(
@@ -120,18 +121,36 @@ def _plot_weather_data(df):
 
     # Plot Precipitation as a bar-like plot, ignoring zero values
     print('\n')
-    print(plotille.plot(
+    fig = plotille.Figure()
+    fig.width = 60
+    fig.height = 10
+    fig.set_x_limits(min_=x_min, max_=x_max)
+    fig.set_y_limits(min_=0)
+    fig.x_label = "Time (h)"
+    fig.y_label = "Precipitation (mm)"
+
+    # Markers for non-zero and zero precipitation
+    fig.plot(
         hours_non_zero, precipitation_non_zero,
-        width=60,
-        height=10,
-        X_label="Time (h)",
-        Y_label="Precipitation (mm)",
-        x_min=x_min,
-        x_max=x_max,
-        y_min=0,
         marker='▮',  # Emulates bar-like appearance
-        lc='blue'
-    ))
+        lc='blue',
+        interp=None
+    )
+    fig.plot(
+        hours_zero, precipitation[~non_zero_precipitation],
+        marker='□',
+        lc='blue',
+        interp=None
+    )
+
+    # Line joining everything for better visualization
+    fig.plot(
+        unrolled_hours, precipitation,
+        lc='blue',
+        interp='linear',
+        marker=None
+    )
+    print(fig.show())
 
 
 
