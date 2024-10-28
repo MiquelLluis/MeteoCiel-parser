@@ -65,6 +65,58 @@ def _parse_weather_table(html):
     return df
 
 
+def _initialise_figure(width=60, height=10, xmin=None, xmax=None, ymin=None, ymax=None,
+                       xlabel=None, ylabel=None):
+    """
+    Initialises a Plotille Figure object with default settings for plotting weather data.
+
+    Parameters
+    ----------
+    width : int, optional
+        The width of the plot in characters.
+    height : int, optional
+        The height of the plot in characters.
+    xmin : int, optional
+        The minimum value for the x-axis.
+    xmax : int, optional
+        The maximum value for the x-axis.
+    ymin : int, optional
+        The minimum value for the y-axis.
+    ymax : int, optional
+        The maximum value for the y-axis.
+    xlabel : str, optional
+        The label for the x-axis.
+    ylabel : str, optional
+        The label for the y-axis.
+
+    Returns
+    -------
+    plotille.Figure
+        A Plotille Figure object with the specified settings.
+    """
+    fig = plotille.Figure()
+    fig.width = width
+    fig.height = height
+
+    # maybe this can be done more elegantly
+    if xmin is not None and xmax is not None:
+        fig.set_x_limits(min_=xmin, max_=xmax)
+    elif xmin is not None:
+        fig.set_x_limits(min_=xmin)
+    elif xmax is not None:
+        fig.set_x_limits(max_=xmax)
+    if ymin is not None and ymax is not None:
+        fig.set_y_limits(min_=ymin, max_=ymax)
+    elif ymin is not None:
+        fig.set_y_limits(min_=ymin)
+    elif ymax is not None:
+        fig.set_y_limits(max_=ymax)
+
+    fig.x_label = xlabel
+    fig.y_label = ylabel
+    return fig
+
+
 def _plot_weather_data(df):
     """
     Plots columns of a DataFrame representing Time, Temperature, Wind speed, and Precipitation
@@ -94,40 +146,37 @@ def _plot_weather_data(df):
     hours_zero = unrolled_hours[~non_zero_precipitation]
 
     # Plot Temperature
-    print(plotille.plot(
-        unrolled_hours, temperature,
-        width=60,
-        height=10,
-        X_label="Time (h)",
-        Y_label="Temp (°C)",
-        x_min=x_min,
-        x_max=x_max,
-        lc='red'
-    ))
+    fig = _initialise_figure(
+        width=60, height=10,
+        xmin=x_min, xmax=x_max,
+        ymin=float(temperature.min() - 2), ymax=float(temperature.max() + 2),
+        xlabel="Time (h)",
+        ylabel="Temperature (°C)"
+    )
+    fig.plot(unrolled_hours, temperature, lc='red', interp='linear')
+    print(fig.show())
 
     # Plot Wind Speed
     print('\n')
-    print(plotille.plot(
-        unrolled_hours, wind_speed,
-        width=60,
-        height=10,
-        X_label="Time (h)",
-        Y_label="Wind Speed (km/h)",
-        x_min=x_min,
-        x_max=x_max,
-        y_min=0,
-        lc='magenta'
-    ))
+    fig = _initialise_figure(
+        width=60, height=10,
+        xmin=x_min, xmax=x_max,
+        ymin=0, 
+        xlabel="Time (h)",
+        ylabel="Wind Speed (km/h)"
+    )
+    fig.plot(unrolled_hours, wind_speed, lc='magenta', interp='linear')
+    print(fig.show())
 
     # Plot Precipitation as a bar-like plot, ignoring zero values
     print('\n')
-    fig = plotille.Figure()
-    fig.width = 60
-    fig.height = 10
-    fig.set_x_limits(min_=x_min, max_=x_max)
-    fig.set_y_limits(min_=0)
-    fig.x_label = "Time (h)"
-    fig.y_label = "Precipitation (mm)"
+    fig = _initialise_figure(
+        width=60, height=10,
+        xmin=x_min, xmax=x_max,
+        ymin=0, 
+        xlabel="Time (h)",
+        ylabel="Precipitation (mm)"
+    )
 
     # Markers for non-zero and zero precipitation
     fig.plot(
