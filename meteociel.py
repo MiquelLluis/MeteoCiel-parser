@@ -117,6 +117,33 @@ def _initialise_figure(width=60, height=10, xmin=None, xmax=None, ymin=None, yma
     return fig
 
 
+def _annotate_days(fig):
+    """
+    Annotates days with vertical lines in the plotille figure.
+
+    Parameters
+    ----------
+    fig : plotille.Figure
+        The figure to annotate.
+
+    Returns
+    -------
+    fig : plotille.Figure
+        The annotated figure.
+    """
+    # Get limits of the plot 
+    x_min, x_max = fig.x_limits()
+    y_min, y_max = fig.y_limits()
+
+    # Annotate days with vertical lines
+    x_ini = (x_min // 24 + 1) * 24
+    while x_ini < x_max:
+        fig.plot([x_ini, x_ini], [y_min, y_max], lc='bright_black', label=str(x_ini))
+        x_ini += 24
+
+    return fig
+
+
 def _plot_weather_data(df):
     """
     Plots columns of a DataFrame representing Time, Temperature, Wind speed, and Precipitation
@@ -154,6 +181,7 @@ def _plot_weather_data(df):
         ylabel="Temperature (°C)"
     )
     fig.plot(unrolled_hours, temperature, lc='red', interp='linear')
+    fig = _annotate_days(fig)
     print(fig.show())
 
     # Plot Wind Speed
@@ -166,6 +194,7 @@ def _plot_weather_data(df):
         ylabel="Wind Speed (km/h)"
     )
     fig.plot(unrolled_hours, wind_speed, lc='magenta', interp='linear')
+    fig = _annotate_days(fig)
     print(fig.show())
 
     # Plot Precipitation as a bar-like plot, ignoring zero values
@@ -199,6 +228,7 @@ def _plot_weather_data(df):
         interp='linear',
         marker=None
     )
+    fig = _annotate_days(fig)
     print(fig.show())
 
 
