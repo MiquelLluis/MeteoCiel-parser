@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from bs4 import BeautifulSoup
 import pandas as pd
 try:
@@ -171,7 +173,13 @@ def _plot_weather_data(df):
     unrolled_hours = hours + day_offsets * 24  # Accumulate hours, adding 24h for each new day
 
     x_min, x_max = int(unrolled_hours.min()), int(unrolled_hours.max())
-    x_max = x_min + 48
+
+    # Keep the range of data within now + 3 days if available
+    x_now = datetime.now().hour
+    if x_now > x_min:
+        x_min = x_now
+    if x_now+72 < x_max:
+        x_max = x_min + 72
 
     temperature = df["Temperature"].str.replace(" °C", "").astype(int)
     wind_speed = df["Wind Speed"].astype(int)
